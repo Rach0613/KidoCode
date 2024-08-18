@@ -1,0 +1,77 @@
+import pandas as pd
+import numpy as np
+from matplotlib import pyplot as plt
+import seaborn as sns
+
+# Load the Excel file
+pizza_df = pd.read_excel('Data Model - Pizza Sales.xlsx', engine='openpyxl')
+
+# Check for duplicated records
+duplicates = pizza_df.duplicated().sum()
+print(f"Number of duplicated records: {duplicates}")
+
+# Compute basic statistics for numeric columns, excluding 'datetime.time' columns
+numeric_cols = pizza_df.select_dtypes(include=[np.number]).columns
+
+mean = pizza_df[numeric_cols].mean() # mean=average
+median = pizza_df[numeric_cols].median()
+mode = pizza_df[numeric_cols].mode().iloc[0]  # Use iloc[0] to handle multiple modes
+std_dev = pizza_df[numeric_cols].std()
+
+# Combine all statistics into a DataFrame with statistics labels as the first column
+descriptive_stats = pd.DataFrame({
+    'Statistic': ['Mean', 'Median', 'Mode', 'Standard Deviation'],
+    'order_details_id': [mean['order_details_id'], median['order_details_id'], mode['order_details_id'], std_dev['order_details_id']],
+    'order_id': [mean['order_id'], median['order_id'], mode['order_id'], std_dev['order_id']],
+    'quantity': [mean['quantity'], median['quantity'], mode['quantity'], std_dev['quantity']],
+    'unit_price': [mean['unit_price'], median['unit_price'], mode['unit_price'], std_dev['unit_price']],
+    'total_price': [mean['total_price'], median['total_price'], mode['total_price'], std_dev['total_price']]
+})
+
+# Total revenue
+total_revenue = pizza_df['total_price'].sum()
+print("Total Revenue: $", total_revenue)
+
+# Calculate average order value
+avg_order_value = pizza_df.groupby('order_id')['total_price'].sum().mean()
+print("Average Order Value: $", round(avg_order_value, 2))  # Set the precision to two digits
+
+# Total pizzas sold
+total_pizzas_sold = pizza_df['quantity'].sum()
+print("Total Pizzas Sold:", total_pizzas_sold)
+
+# Total orders
+total_orders = len(pizza_df.groupby('order_id'))
+print("Total Orders:", total_orders)
+
+# Average pizzas per order
+avg_pizzas_per_order = pizza_df['quantity'].sum() / total_orders
+print("Average Pizzas per Order:", round(avg_pizzas_per_order, 2))
+
+# Save the descriptive statistics to a CSV file
+descriptive_stats.to_csv('descriptive_statistics.csv')
+
+print("Descriptive statistics saved to descriptive_statistics.csv")
+
+
+
+
+#plotting graph
+
+#Sales Performance Analysis: What is the average unit price and revenue of pizza across different categories and sizes? (bar graph)
+
+
+
+
+
+#Seasonal Analysis: Which season has the highest revenue? (box plot)
+
+
+#Which days of the week have the highest number of orders? (line graph)
+
+
+#Which month has the highest revenue? (plot graph)
+
+
+
+#Customer Behavior Analysis: Which pizza is ordered the most number of times? (pie chart)
