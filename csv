@@ -58,20 +58,85 @@ print("Descriptive statistics saved to descriptive_statistics.csv")
 
 #plotting graph
 
-#Sales Performance Analysis: What is the average unit price and revenue of pizza across different categories and sizes? (bar graph)
+#Sales Performance Analysis: What is the average unit price and revenue of pizza across different categories? (bar graph)
+category_analysis = pizza_df.groupby('pizza_category').agg(
+    average_unit_price=('unit_price', 'mean'),
+    revenue_per_category=('unit_price', lambda x: (x * pizza_df['quantity']).sum())
+).sort_values(by='revenue_per_category', ascending=False)
+print("Average Unit Price and Revenue by Category:\n", category_analysis)
 
-
-
-
-
-#Seasonal Analysis: Which season has the highest revenue? (box plot)
+    # Revenue by Pizza Category
+category_analysis['revenue_per_category'].plot(kind='bar', color='skyblue')
+plt.xlabel('Pizza Category')
+plt.ylabel('Revenue')
+plt.title('Revenue by Pizza')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
 
 
 #Which days of the week have the highest number of orders? (line graph)
+pizza_df['day_of_week'] = pd.to_datetime(pizza_df['order_date']).dt.strftime('%A')
+day_of_week_analysis = pizza_df.groupby('day_of_week')['order_id'].count().sort_values(ascending=False)
+print("Highest Number of Orders by Day of Week:\n", day_of_week_analysis)
 
+    # orders by day of week
+day_of_week_analysis.plot(kind='line', color='purple')
+plt.xlabel('Day of Week')
+plt.ylabel('Number of Orders')
+plt.title('Orders by Day of Week')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
 
 #Which month has the highest revenue? (plot graph)
+month_revenue_analysis = pizza_df.groupby(pd.to_datetime(pizza_df['order_date']).dt.strftime('%B'))['total_price'].sum()
+print("Highest Revenue Months:\n", month_revenue_analysis)
+
+    # Renvenue by month
+plt.scatter(month_revenue_analysis.index, month_revenue_analysis, color='lime')
+plt.xlabel('Month')
+plt.ylabel('Revenue')
+plt.title('Revenue by Month')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
 
 
+#Seasonal Analysis: Which season has the highest revenue? (box plot)
+def categorize_season(month):
+    if month in ['March', 'April', 'May']:
+        return 'Spring'
+    elif month in ['June', 'July', 'August']:
+        return 'Summer'
+    elif month in ['September', 'October', 'November']:
+        return 'Fall'
+    else:
+        return 'Winter'
+        
+pizza_df['order_date'] = pd.to_datetime(pizza_df['order_date'])
+pizza_df['season'] = pizza_df['order_date'].dt.strftime('%B').map(categorize_season)
+print(pizza_df.head())
+
+    # Revenue by Season
+sns.boxplot(x='season', y='total_price', data=pizza_df, palette='coolwarm')
+plt.xlabel('Season')
+plt.ylabel('Revenue')
+plt.title('Revenue Distribution by Season')
+plt.tight_layout()
+plt.show()
 
 #Customer Behavior Analysis: Which pizza is ordered the most number of times? (pie chart)
+most_ordered_pizza = pizza_df.groupby('pizza_name').agg(
+    order_count=('order_id', 'count'),
+    average_unit_price=('unit_price', 'mean')
+).nlargest(3, 'order_count')
+print("Most Ordered Pizzas:\n", most_ordered_pizza)
+
+pizzas_per_category = pizza_df['pizza_category'].value_counts()
+    # pizza per category distribution
+pizzas_per_category.plot(kind='pie', autopct='%1.1f%%', colors=['skyblue', 'lightgreen', 'coral'])
+plt.title('Pizza Category Distribution')
+plt.ylabel('')  # Removes the default y-label to make the plot cleaner
+plt.axis('equal')  # Ensures the pie chart is a circle
+plt.show()
