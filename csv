@@ -17,6 +17,7 @@ mean = pizza_df[numeric_cols].mean() # mean=average
 median = pizza_df[numeric_cols].median()
 mode = pizza_df[numeric_cols].mode().iloc[0]  # Use iloc[0] to handle multiple modes
 std_dev = pizza_df[numeric_cols].std()
+percentile = pizza_df[numeric_cols].quantile([0.25, 0.5, 0.75])
 
 # Combine all statistics into a DataFrame with statistics labels as the first column
 descriptive_stats = pd.DataFrame({
@@ -135,7 +136,7 @@ print("Most Ordered Pizzas:\n", most_ordered_pizza)
 
 pizzas_per_category = pizza_df['pizza_category'].value_counts()
     # pizza per category distribution
-pizzas_per_category.plot(kind='pie', autopct='%1.1f%%', colors=['skyblue', 'lightgreen', 'coral'])
+pizzas_per_category.plot(kind='pie', autopct='%1.1f%%', colors=['skyblue', 'lightgreen', 'coral', 'red'])
 plt.title('Pizza Category Distribution')
 plt.ylabel('')  # Removes the default y-label to make the plot cleaner
 plt.axis('equal')  # Ensures the pie chart is a circle
