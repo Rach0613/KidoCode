@@ -3,7 +3,7 @@ import time
 import csv
 
 # Open serial port
-ser = serial.Serial('COM4', 9600)
+ser = serial.Serial('COM4', 9600)  # Change COM3 to your port
 time.sleep(2)  # Wait for Arduino to initialize
 
 # Open a CSV file to write data
@@ -11,7 +11,7 @@ with open('ultrasonic_data.csv', 'w', newline='') as csvfile:
     fieldnames = ['Time (ms)', 'Distance (cm)']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
-
+    
     # Read data from serial and write to CSV
     while True:
         try:
