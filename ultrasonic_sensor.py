@@ -1,28 +1,43 @@
 import serial
-import time
-import csv
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime
 
-# Open serial port
-ser = serial.Serial('COM4', 9600)  # Change COM3 to your port
-time.sleep(2)  # Wait for Arduino to initialize
+# Set up the serial connection
+ser = serial.Serial('COM4', 9600)  # Replace 'COM4' with your port
+data = []
 
-# Open a CSV file to write data
-with open('ultrasonic_data.csv', 'w', newline='') as csvfile:
-    fieldnames = ['Time (ms)', 'Distance (cm)']
-    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-    writer.writeheader()
-    
-    # Read data from serial and write to CSV
+try:
+    print("Starting data collection. Press Ctrl+C to stop.")
     while True:
-        try:
-            line = ser.readline().decode('utf-8').strip()
-            if line:
-                time_ms, distance_cm = line.split(',')
-                writer.writerow({'Time (ms)': time_ms, 'Distance (cm)': distance_cm})
-                print(f"Time: {time_ms} ms, Distance: {distance_cm} cm")
-        except KeyboardInterrupt:
-            print("Data collection stopped")
-            break
+        line = ser.readline().decode('utf-8').strip()
+        if line:
+            # Check if the line contains 'cm' and extract the numeric value
+            if 'cm' in line:
+                distance = line.replace('cm', '').strip()
+                timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                data.append([timestamp, distance])
+                
+except KeyboardInterrupt:
+    print("Data collection stopped.")
 
-# Close serial port
-ser.close()
+finally:
+    ser.close()
+
+# Convert to DataFrame
+df = pd.DataFrame(data, columns=['Timestamp', 'Distance'])
+
+# Save to CSV
+df.to_csv('sensor_data.csv', index=False)
+
+# Plot the data
+plt.figure(figsize=(10, 6))
+plt.plot(df['Timestamp'], df['Distance'], marker='o', linestyle='-', color='b')
+plt.xlabel('Timestamp')
+plt.ylabel('Distance (cm)')
+plt.title('Distance Measurements Over Time')
+plt.xticks(rotation=45, ha='right')
+plt.tight_layout()
+plt.grid(True)
+plt.savefig('distance_plot.png')
+plt.show()
