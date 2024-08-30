@@ -5,10 +5,10 @@ from PIL import Image
 import os
 
 # storing image path
-img_path = r"C:\\Users\\user\\Downloads\\quokka.jpeg"
+img_path = "C:\\Users\\user\\Downloads\\quokka.jpeg"
 
 # storing pdf path
-pdf_path = r"C:\\Users\\user\\Downloads\\quokka_pdf.pdf"
+pdf_path = "C:\\Users\\user\\Downloads\\quokka_pdf.pdf"
 # opening image
 image = Image.open(img_path)
 
@@ -28,4 +28,4 @@ image.close()
 file.close()
 
 # output
-print("Successfully made pdf file")
+print("Successfully made pdf file........")
