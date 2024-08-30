@@ -37,8 +37,9 @@ def convert_image_to_pdf(img_path, pdf_path):
     finally:
         image.close()
 
-img_path = r"C:\\Users\Ashley Law\Downloads\\picture test.jpg"
-pdf_path = r"C:\\Users\Ashley Law\Downloads\\picture test.pdf"
+# Get the image and PDF paths from the user
+img_path = str(input("Place your image path link here: "))
+pdf_path = str(input("Type your pdf path link here: "))
 
 # Call the function to convert the image to PDF
 convert_image_to_pdf(img_path, pdf_path)
