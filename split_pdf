@@ -1,6 +1,9 @@
+# PdfReader class - read PDFs
+# PdfWriter class - write in PDFs
 from PyPDF2 import PdfReader, PdfWriter
 
-# Function to split PDF
+# creating a function to split the pdf
+# 2 param (input path & folder)
 def split_pdf(input_pdf_path, output_folder):
     # Create a PDF reader object
     pdf_reader = PdfReader(input_pdf_path)
@@ -17,16 +20,18 @@ def split_pdf(input_pdf_path, output_folder):
         output_pdf_path = f"{output_folder}/page_{page_number + 1}.pdf"
 
         # Write the single-page PDF to the output path
+        # open the pdf file in binary write mode
         with open(output_pdf_path, 'wb') as output_pdf_file:
             pdf_writer.write(output_pdf_file)
 
         print(f"Created: {output_pdf_path}")
 
 # Path to the input PDF
+# define a path
 input_pdf_path = "C:\\Users\\user\\Downloads\\C++ Programming From Problem Analysis to Program Design [5th Edition] book.pdf"
 
 # Folder where the output PDFs will be saved
 output_folder = "C:\\Users\\user\\Downloads\\demo_split"
 
-# Split the PDF
+# call the function
 split_pdf(input_pdf_path, output_folder)
