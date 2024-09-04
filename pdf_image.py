@@ -1,9 +1,10 @@
 # install pip install pypdfium2
 import pypdfium2
+# operating system of the files
 import os
 
 def pdf_to_images(pdf_path, output_folder, image_format='png'):
-    # Ensure the output directory exists
+    # Ensures the output directory exists
     os.makedirs(output_folder, exist_ok=True)
     
     # Open the PDF file
@@ -25,9 +26,7 @@ def pdf_to_images(pdf_path, output_folder, image_format='png'):
 
     pdf.close()
 
-# Usage
+# select a pdf file path and output folder path
 pdf_path = 'C:\\Users\\user\\Downloads\\21583473018.pdf ' # Corrected file path
 output_folder = 'C:\\Users\\user\\Downloads\\demo_images'
 pdf_to_images(pdf_path, output_folder)
-
-
